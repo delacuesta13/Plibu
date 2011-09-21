@@ -27,9 +27,14 @@ class HTML {
 		$data = '<script type="text/javascript" src="'.BASE_PATH.'/js/'.$fileName.'.js"></script>';
 		return $data;
 	}
+	
+	function includeLess($fileName) {
+		$data = '<link rel="stylesheet/less" media="all" href="'.BASE_PATH.'/less/'.$fileName.'.less"/>';
+		return $data;
+	}
 
 	function includeCss($fileName) {
-		$data = '<link rel="stylesheet" media="screen" type="text/css" href="'.BASE_PATH.'/css/'.$fileName.'.css"/>';
+		$data = '<link rel="stylesheet" type="text/css" href="'.BASE_PATH.'/css/'.$fileName.'.css"/>';
 		return $data;
 	}
 	
