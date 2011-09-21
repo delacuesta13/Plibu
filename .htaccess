@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	
+	# http://betacontinua.com/blog/2008/12/24/cakephp-problemas-al-subir-la-aplicacion-a-tu-hosting/
+	RewriteBase /plibu
+	
+	RewriteRule    ^$    public/    [L]
+	RewriteRule    (.*) public/$1    [L]
+</IfModule>
