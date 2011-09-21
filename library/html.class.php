@@ -29,7 +29,7 @@ class HTML {
 	}
 
 	function includeCss($fileName) {
-		$data = '<link rel="stylesheet" media="screen,projection" type="text/css" href="'.BASE_PATH.'/css/'.$fileName.'.css"/>';
+		$data = '<link rel="stylesheet" media="screen" type="text/css" href="'.BASE_PATH.'/css/'.$fileName.'.css"/>';
 		return $data;
 	}
 	
