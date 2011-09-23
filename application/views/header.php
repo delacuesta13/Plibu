@@ -20,7 +20,7 @@
 		<![endif]-->	
 		
 		<!-- ficheros css -->
-		<?php echo $html->includeLess('bootstrap');?>	
+		<?php echo $html->includecss('bootstrap.min');?>	
 		<?php echo $html->includeCss('custom');?>
 			
 		<!-- include de ficheros css -->
@@ -48,7 +48,6 @@
 			
 		<!-- ficheros javascript -->
 		<?php echo $html->includeJs('jquery-1.6.4.min');?>	
-		<?php echo $html->includeJs('less-1.1.3.min');?>
 		<?php echo $html->includeJs('bootstrap/bootstrap-dropdown');?>
 		<?php echo $html->includeJs('bootstrap/bootstrap-alerts');?>
 			
