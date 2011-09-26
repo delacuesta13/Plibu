@@ -48,8 +48,12 @@
 			
 		<!-- ficheros javascript -->
 		<?php echo $html->includeJs('jquery-1.6.4.min');?>	
-		<?php echo $html->includeJs('bootstrap/bootstrap-dropdown');?>
-		<?php echo $html->includeJs('bootstrap/bootstrap-alerts');?>
+		<?php echo $html->includeJs('bootstrap/bootstrap-modal');?>	
+		<?php echo $html->includeJs('bootstrap/bootstrap-dropdown');?>	
+		<?php echo $html->includeJs('bootstrap/bootstrap-tabs');?>	
+		<?php echo $html->includeJs('bootstrap/bootstrap-twipsy');?>	
+		<?php echo $html->includeJs('bootstrap/bootstrap-popover');?>	
+		<?php echo $html->includeJs('bootstrap/bootstrap-alerts');?>	
 			
 		<!-- include de ficheros javascript -->	
 		<?php 
