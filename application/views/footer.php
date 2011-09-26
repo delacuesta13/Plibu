@@ -15,7 +15,8 @@
 				<p class="pull-right">Developed by Jhon Adrián Cerón Guzmán<br/>
 					<a href="http://www.w3.org/html/logo/" style="float:right" target="_blank">
 					<img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-semantics.png" width="103" height="40"
-					alt="HTML5 Powered with CSS3 / Styling, and Semantics" title="HTML5 Powered with CSS3 / Styling, and Semantics">
+					alt="HTML5 Powered with CSS3 / Styling, and Semantics" title="HTML5 Powered with CSS3 / Styling, and Semantics"
+					style="margin-top: 5px;">
 					</a>
 				</p>
 				<p>
