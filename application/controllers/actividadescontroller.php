@@ -22,7 +22,21 @@ class ActividadesController extends VanillaController {
 		return $this->Actividad->query ('select * from periodos where actual = \'1\'');
 	}
 	
-	function index () {
+	function index ($typeMessage = null, $idMessage = null) {
+		
+		$listMessages = array(
+			'error' => array(
+				'404' => array(
+					'type' => 'info',
+					'message' => '<strong>Oops!</strong> Al parecer la página que intentas acceder no está disponible o definitivamente no existe.'
+				)
+			)
+		);
+		
+		## se recibe un mensaje para mostrar
+		if (isset($typeMessage, $idMessage) && array_key_exists($typeMessage, $listMessages) && array_key_exists($idMessage, $listMessages[$typeMessage])) {
+			$this->set('showMessage', $listMessages[$typeMessage][$idMessage]);
+		}
 		
 		/*
 		 * consultar el período actual,
@@ -291,7 +305,6 @@ class ActividadesController extends VanillaController {
 		
 	}
 	
-
 	/**
 	 * 
 	 * devolver el nombre de una actividad
@@ -333,7 +346,6 @@ class ActividadesController extends VanillaController {
 		} /* if */
 		return $nombreActividad;
 	}
-	
 	
 	function afterAction () {
 		
