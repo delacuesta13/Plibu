@@ -12,11 +12,10 @@
 			</section><!-- /content -->
 	  		
 			<footer>
-				<p class="pull-right">Developed by Jhon Adrián Cerón Guzmán<br/>
+				<p class="pull-right">
+					Developed by Jhon Adrián Cerón Guzmán<br/>
 					<a href="http://www.w3.org/html/logo/" style="float:right" target="_blank">
-					<img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-semantics.png" width="103" height="40"
-					alt="HTML5 Powered with CSS3 / Styling, and Semantics" title="HTML5 Powered with CSS3 / Styling, and Semantics"
-					style="margin-top: 5px;">
+						<img src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" width="32" height="32" alt="HTML5 Powered" title="HTML5 Powered">
 					</a>
 				</p>
 				<p>
