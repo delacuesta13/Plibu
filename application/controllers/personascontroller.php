@@ -23,6 +23,10 @@ class PersonasController extends VanillaController {
 		}/* else */
 	}
 	
+	function consultar_perfil ($dni, $idPeriodo) {
+		return $this->Persona->consultar_perfil ($dni, $idPeriodo);
+	}
+	
 	/**
 	 * Este controlador permite
 	 * la identificación de las personas
