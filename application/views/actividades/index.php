@@ -18,6 +18,20 @@
 
 <div class="row">
 	<div class="span16">
+	
+		<?php 
+		## mostrar alert
+		if (isset($showMessage)) {
+		?>
+		
+		<div class="alert-message <?php echo $showMessage['type']?> fade in" data-alert="alert">
+			<a class="close" href="#">&times;</a>
+			<p><?php echo $showMessage['message']?></p>
+		</div>
+		
+		<?php	
+		}
+		?>
 		
 		<div class="row">
 			<div class="span16">
