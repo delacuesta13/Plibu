@@ -65,7 +65,7 @@
 					<?php
 					$idCurso = $data_query[$i]['Curso']['id'];
 					$nombreUrl = performAction('actividades', 'getNombreUrl', array($idCurso, 'curso')); 
-					echo $html->link('ver', $idCurso . '/' . $nombreUrl);
+					echo $html->link('ver', strtolower($this->_controller) . '/ver/' . $idCurso . '/' . $nombreUrl);
 					?>
 				</td>		
 			</tr>
