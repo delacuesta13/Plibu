@@ -34,6 +34,7 @@ class Persona extends VanillaModel {
 				AND perfil.persona_dni = persona.dni 
 				AND perfil.perfil_multientidad = multientidad.id 
 		';
+		return $this->query($sql);
 	}
 	
 }
