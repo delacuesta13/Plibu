@@ -22,6 +22,26 @@ class ActividadesController extends VanillaController {
 		return $this->Actividad->query ('select * from periodos where actual = \'1\'');
 	}
 	
+	function consultar_periodo ($idPeriodo) {
+		return $this->Actividad->query('select * from periodos where id = \'' . mysql_real_escape_string($idPeriodo) . '\' ');
+	}
+	
+	function consultar_curso ($idCurso) {
+		if (preg_match('/^[0-9]{1,}$/', $idCurso)) {
+			return $this->Actividad->consultar_curso($idCurso);
+		} else {
+			return false;
+		}
+	}
+	
+	function listar_horarios ($idCurso) {
+		if (preg_match('/^[0-9]{1,}$/', $idCurso)) {
+			return $this->Actividad->listar_horarios ($idCurso);
+		} else {
+			return false;
+		}
+	}
+	
 	function index ($typeMessage = null, $idMessage = null) {
 		
 		$listMessages = array(
@@ -281,7 +301,10 @@ class ActividadesController extends VanillaController {
 		
 		## termino de agregar los campos para su ordenamiento
 		foreach ($orderFields as $field => $def) {
-			#$this->$model->orderBy ($field);
+			## agrego el campo, sólo si se definió para que sea ordenado
+			if (array_key_exists('sort', $def['params']) && $def['params']['sort']) {
+				$this->$model->orderBy ($field);
+			} /* if */
 		} /* foreach */
 		unset ($orderFields, $field, $def);
 		
@@ -312,15 +335,15 @@ class ActividadesController extends VanillaController {
 			$dataCurso = $this->Actividad->consultar_curso($idCurso);
 			
 			## no se recibió el nombre de la actividad (en formato URL) como debería de ser
-			if ($actividad!=$this->getNombreUrl($idCurso) || count($dataCurso)==0) {
+			if ($actividad!=$this->getNombreUrl($idCurso) || count($dataCurso)==0 || $dataCurso[0]['Curso']['abierto']!=1) {
 				redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action'], array('error', '404'));
 			}
-			
+
 			$tag_js = '
 			
 			function loadDataInscripcion () {
 				$(function () {
-					var url = url_project + "' . strtolower($this->_controller) . '/' . 'getInscripcionCurso' . '/' . $idCurso . '";
+					var url = url_project + "' . 'inscripciones' . '/' . 'getInscripcionCurso' . '/' . $idCurso . '";
 					$.ajax(
 					{
 						url: url,
@@ -344,121 +367,26 @@ class ActividadesController extends VanillaController {
 			loadDataInscripcion();
 			
 			$(function () {
-				
-				$( "a[rel=twipsy]" ).twipsy({
-					live: true,
-					placement: "right"
-				});
-				
-				$( "a[rel=popover]" )
+				$( "td[title]" )
 				.popover({
-					offset: 10
+					html: true
 				})
 				.click(function(e) {
 					e.preventDefault()
-				})
-				
+				});
 			});
 			
 			';
 			$this->set('make_tag_js', $tag_js);
 
 			$this->set('dataCurso', $dataCurso);
+			$this->set('listaHorarios', $this->listar_horarios($idCurso));
 			$this->set('idCurso', $idCurso);
 			$this->set('actividadUrl', $actividad);
 			
 		} else {
 			redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action'], array('error', '404'));
 		}
-		
-	}
-	
-	/*
-	 * mostrar link de inscripción,
-	 * según el id del curso.
-	 * Activar y desactivar el link,
-	 * si está inscrito el usuario de la 
-	 * sesión o no ha iniciado sesión.
-	 */
-	function getInscripcionCurso ($idCurso = null) {
-		
-		## recibo un id de un curso
-		if (isset($idCurso) && preg_match('/^[0-9]{1,}$/', $idCurso)) {
-			$dataCurso = $this->Actividad->consultar_curso ($idCurso);
-		
-			$strSalida = '<script type="text/JavaScript">
-			$( "a[rel=twipsy]" )
-				.twipsy({
-					live: true,
-					placement: "right"
-				});
-			$( "a[rel=popover]" )
-				.popover({
-					offset: 10,
-					html: true
-				})
-				.click(function(e) {
-					e.preventDefault()
-				});
-			</script>';
-			
-			## revisar que se el usuario haya iniciado sesión
-			if (array_key_exists('logueado', $_SESSION) && $_SESSION['logueado'] && count($dataCurso)!=0) {
-				## obtengo el período actual.
-				$periodoActual = $this->periodo_actual();
-				## obtengo el perfil del usuario en el período actual
-				$dataPerfil = performAction('personas', 'consultar_perfil', array($_SESSION['persona_dni'], $periodoActual[0]['Periodo']['id']));
-				## revisar si la persona ya está inscrita en el curso
-				$inscrito = $this->Actividad->query('select * from inscripciones where persona_dni = \'' . $_SESSION['persona_dni'] . 
-				'\' and curso_id = \'' . mysql_real_escape_string($idCurso) . '\'');
-				$inscrito = (is_array($inscrito) && count($inscrito)!=0) ? true : false;
-				 
-				## Si la persona no tiene un perfil, no se puede inscribir.
-				if (count($dataPerfil)==0) {
-					$strSalida .= '
-					<a class="btn danger disabled" href="javaScript:void(0);" rel="popover" title="Inscripción" 
-					data-content="Es necesario que tengas un perfil en el período <i>' . $periodoActual[0]['Periodo']['periodo'] . 
-					'</i> para que puedas inscribirte en <strong>' . 
-					$dataCurso[0]['Actividad']['nombre'] . '</strong>.">
-						Incribirme
-					</a>
-					';		
-				} elseif ($inscrito) {
-					## la persona ya está inscrita
-					$strSalida .= '
-					<a class="btn success disabled" href="javaScript:void(0);" rel="popover" title="Inscripción" 
-					data-content="Ya estás inscrito en <strong>' . $dataCurso[0]['Actividad']['nombre'] . '</strong>."> 
-						Incribirme
-					</a>
-					';				
-				} else {
-					## la persona puede inscribirse
-					$strSalida .= '
-					<a class="btn primary" href="javaScript:void(0);" onclick="inscripcionCurso(' . $idCurso . ')" rel="twipsy" title="Inscribirme!"> 
-						Incribirme
-					</a>
-					';
-				}				 
-				
-			} elseif(count($dataCurso)!=0) {
-				$strSalida .= '
-				<a class="btn primary disabled" href="javaScript:void(0);" rel="popover" title="Inscripción" 
-				data-content="Es necesario que te identifiques para que puedas inscribirte en <strong>' . 
-				$dataCurso[0]['Actividad']['nombre'] . '</strong>.">
-					Incribirme
-				</a>
-				';				
-			} /* elseif */
-			
-			echo $strSalida;
-		}
-		
-		/****************************************************/
-		
-		## Función de respuesta ajax
-		$this->doNotRenderHeader = 1;
-	
-		header("Content-Type: text/html; charset=iso-8859-1");
 		
 	}
 	
@@ -503,7 +431,7 @@ class ActividadesController extends VanillaController {
 		} /* if */
 		return $nombreActividad;
 	}
-	
+		
 	function afterAction () {
 		
 	}
