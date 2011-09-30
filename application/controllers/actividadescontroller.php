@@ -350,6 +350,7 @@ class ActividadesController extends VanillaController {
 						dataType: "html",
 						beforeSend: function() {
 							$( ".cargandoInscripcion" ).css("display", "block");
+							$( "#dynamicInscripcion" ).html("");
 						},
 						success: function( data ) {
 							$( ".cargandoInscripcion" ).css("display", "none");
@@ -361,12 +362,30 @@ class ActividadesController extends VanillaController {
 			}
 			
 			function inscripcionCurso (idCurso) {
-				alert("idCurso: " + idCurso);
+				$(function () {
+					var url = url_project + "inscripciones/inscripcionCurso"; 
+					$.ajax({
+						url: url,
+						type: "POST",
+						dataType: "html",
+						data: {idCurso: ' . $idCurso . '},
+						beforeSend: function () {
+							$("#modal-inscripcion .modal-body .text").html("Espere por favor, esta operación puede tardar algún tiempo.");
+							$("#modal-inscripcion .modal-body .loading").css("display", "block");
+							$("#modal-inscripcion .modal-footer").html(\'<a href="javaScript:void(0);" class="btn" id="closeModal">Cerrar</a>\');
+						},
+						success: function( data ) {
+							$("#modal-inscripcion .modal-body .loading").css("display", "none");
+							$("#modal-inscripcion .modal-body .text").html(data);
+						}
+					});
+				});
 			}
 			
 			loadDataInscripcion();
 			
 			$(function () {
+				
 				$( "td[title]" )
 				.popover({
 					html: true
@@ -374,6 +393,15 @@ class ActividadesController extends VanillaController {
 				.click(function(e) {
 					e.preventDefault()
 				});
+				
+				$("#closeModal").bind("click", function () {
+					$("#modal-inscripcion").modal("hide");
+				});
+				
+				$("#modal-inscripcion").bind("hidden", function () {
+					loadDataInscripcion();
+				});
+				
 			});
 			
 			';

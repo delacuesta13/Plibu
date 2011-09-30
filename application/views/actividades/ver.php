@@ -18,6 +18,21 @@ $listaDias = array('Lunes' , 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado
 	<h1><?php echo $dataCurso[0]['Actividad']['nombre']?> <small><?php echo $dataCurso[0]['Area']['nombre']?></small></h1>
 </div>
 
+<div id="modal-inscripcion" class="modal hide fade">
+	<div class="modal-header">
+		<a href="#" class="close">&times;</a>
+		<h3>Inscripción</h3>
+	</div>
+	<div class="modal-body">
+		<p class="text">¿Está seguro (a) que desea inscribirse en <?php echo $dataCurso[0]['Actividad']['nombre']?>?</p>
+		<p class="loading" style="display: none;"><?php echo $html->includeImg('ajax-loader.gif', 'Cargando')?></p>
+	</div>
+	<div class="modal-footer">
+		<a href="javaScript:void(0);" class="btn" id="closeModal">Cancelar</a>
+		<a href="javaScript:void(0);" onclick="inscripcionCurso(<?php echo $idCurso?>)" class="btn  primary">Aceptar</a>
+	</div>
+</div>
+
 <div class="row">
 	<div class="span16">
 		<div class="row">
