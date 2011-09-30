@@ -45,12 +45,12 @@ $listaDias = array('Lunes' , 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado
 				<!-- tabs -->
 				<!-- nav -->
 				<ul class="tabs" data-tabs="tabs">
-					<li><a href="#info">Información</a></li>
-					<li class="active"><a href="#horarios">Horarios</a></li>
+					<li class="active"><a href="#info">Información</a></li>
+					<li><a href="#horarios">Horarios</a></li>
 				</ul>
 				<!-- content -->
 				<div id="my-tab-content" class="tab-content">
-					<div id="info">
+					<div class="active" id="info">
 						<div class="row">
 							<div class="span5">
 								<h3>Actividad</h3>
@@ -107,7 +107,7 @@ $listaDias = array('Lunes' , 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado
 							</div><!-- /span6 -->
 						</div><!-- /row -->
 					</div>
-					<div class="active" id="horarios">
+					<div id="horarios">
 						<table class="zebra-striped">
 							<thead>
 								<tr>
@@ -128,97 +128,72 @@ $listaDias = array('Lunes' , 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado
 								<?php
 							} else {
 								
-								$tableDatos = array();
+								$horariosCurso = array();
 								$temp = array();
-								$direcciones = array();
+								$direccionLugar = array();
 								
 								for ($i = 0; $i < count($listaHorarios); $i++) {
 									$temp = array(
 										'dia' => $listaHorarios[$i]['Horario']['dia'],
+										'lugar' => $listaHorarios[$i]['Lugar']['nombre'],
 										'hora_inic' => substr($listaHorarios[$i]['Horario']['hora_inic'], 0, 5),
-										'hora_fin' => substr($listaHorarios[$i]['Horario']['hora_fin'], 0, 5),
-										'lugar' => $listaHorarios[$i]['Lugar']['nombre']
+										'hora_fin' => substr($listaHorarios[$i]['Horario']['hora_fin'], 0, 5)
 									);
-									if (!array_key_exists($listaHorarios[$i]['Lugar']['nombre'], $direcciones)) {
-										$direcciones[$listaHorarios[$i]['Lugar']['nombre']] = $listaHorarios[$i]['Lugar']['direccion'];
+									array_push($horariosCurso, $temp);
+									if (!array_key_exists($listaHorarios[$i]['Lugar']['nombre'], $direccionLugar)) {
+										$direccionLugar[$listaHorarios[$i]['Lugar']['nombre']] = $listaHorarios[$i]['Lugar']['direccion'];
 									}
-									array_push($tableDatos, $temp);
-								} /* for */
+								}
 								
-								$groupRows = array();
-								$groupItems = array('dia', 'lugar');
+								$groupItems = array('dia', 'lugar', 'hora_inic', 'hora_fin');
 								$strTemp = '';
-								
-								for ($i = 0; $i < count($groupItems); $i++) {
-									for ($j = 0; $j < count($tableDatos); $j++) {
-										$strTemp = $tableDatos[$j][$groupItems[$i]];
-										$groupRows[$groupItems[$i]][$tableDatos[$j][$groupItems[$i]]] = 0; 
-										for ($k = $j; $k < count($tableDatos); $k++) {
-											if ($strTemp==$tableDatos[$k][$groupItems[$i]]) {
-												$groupRows[$groupItems[$i]][$tableDatos[$j][$groupItems[$i]]] += 1;
-											} else {
-												break;
-											}
-										} /* k */
-										$k--;
-										$j = $k;
-									} /* j */
-								} /* i */
-								
-								$rowsSalida = array();
-								foreach ($groupRows as $item => $elems) {
-									$k = 0;
-									foreach ($elems as $uniqueData => $numVeces) {
-										$rowsSalida[$k][$item] = $uniqueData;
-										$k += $numVeces;
-									}
-									unset ($uniqueData, $numVeces);
-								}
-								unset($item, $rows);
-								
-								$temp = array();
-								for ($i = 0; $i < count($tableDatos); $i++) {
-									for ($j = 0; $j < count($groupItems); $j++) {
-										unset ($tableDatos[$i][$groupItems[$j]]);
-									}
-									$temp = $tableDatos[$i];
-									foreach ($temp as $col => $value) {
-										$rowsSalida[$i][$col] = $value;
-									} 
-									unset ($col, $value);
-								}
-								
-								$temp = array();
 								$strSalida = '';
-								for ($i = 0; $i < count($rowsSalida); $i++) {
+								$countItem = 0;
+								$temp = array();
+								
+								for ($i = 0; $i < count($horariosCurso); $i++) {
+									
 									$strSalida .= '<tr>';
+									
 									for ($j = 0; $j < count($groupItems); $j++) {
-										if (array_key_exists($groupItems[$j], $rowsSalida[$i])) {
+										if (array_key_exists($groupItems[$j], $horariosCurso[$i])) {
+											## contar el número de veces que aparece el ítem de forma seguida
+											$countItem = 0;
+											$strTemp = $horariosCurso[$i][$groupItems[$j]];
+											for ($k = $i; $k < count($horariosCurso); $k++) {
+												if ($strTemp==$horariosCurso[$k][$groupItems[$j]]) {
+													$countItem++;
+													unset ($horariosCurso[$k][$groupItems[$j]]);
+												} else {
+													break;
+												} /* else */
+											} /* for k */
 											if ($groupItems[$j]=='dia') {
-												$strSalida .= '<td rowspan="' . $groupRows[$groupItems[$j]][$rowsSalida[$i][$groupItems[$j]]] . '"
-												style="vertical-align: middle;">' .	
-												$listaDias[intval($rowsSalida[$i][$groupItems[$j]]) - 1] . '</td>';
+												$strSalida .= '<td rowspan="' . $countItem . '" style="vertical-align: middle; border-left: 1px solid #DDD;">' .
+												$listaDias[intval($strTemp) - 1]												                                                       
+												. '</td>';
 											} elseif ($groupItems[$j]=='lugar') {
-												$strSalida .= '<td rowspan="' . $groupRows[$groupItems[$j]][$rowsSalida[$i][$groupItems[$j]]] . '"
+												$strSalida .= '<td rowspan="' . $countItem . '" style="vertical-align: middle; border-left: 1px solid #DDD;" 
 												title="Lugar" data-content="<address>
-												<strong>' . $rowsSalida[$i][$groupItems[$j]] . '</strong><br/>
-												' . $direcciones[$rowsSalida[$i][$groupItems[$j]]] . '
-												</address>"
-												style="vertical-align: middle;">' .	$rowsSalida[$i][$groupItems[$j]] . '</td>';
+												<strong>' . $strTemp . '</strong><br/>
+												' . $direccionLugar[$strTemp] . '
+												</address>">' .
+												$strTemp . '</td>';
 											} else {
-												$strSalida .= '<td rowspan="' . $groupRows[$groupItems[$j]][$rowsSalida[$i][$groupItems[$j]]] . '"
-												style="vertical-align: middle;">' .	$rowsSalida[$i][$groupItems[$j]] . '</td>';
-											}
-											unset ($rowsSalida[$i][$groupItems[$j]]);
-										}
-									}
-									$temp = $rowsSalida[$i];
-									foreach ($temp as $col => $value) {
+												$strSalida .= '<td rowspan="' . $countItem . '" style="vertical-align: middle; border-left: 1px solid #DDD;">' . 
+												$strTemp . '</td>';
+											} /* else */
+										} /* if */
+									} /* for j -> groupItems */
+									
+									foreach ($horariosCurso[$i] as $value) {
 										$strSalida .= '<td style="border-left: 1px solid #DDD;">' . $value . '</td>';
-									}
-									unset ($col, $value);
+									} /* foreach */
+									unset ($value);
+									
 									$strSalida .= '</tr>';
-								}
+									
+								} /* for i */
 								
 								echo $strSalida;
 								
@@ -231,5 +206,31 @@ $listaDias = array('Lunes' , 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado
 				<!-- /tabs -->
 			</div><!-- /span16 -->
 		</div><!-- /row -->
+		<div class="row" style="margin-top: 20px;">
+			<!-- social -->
+			<div class="span2">
+				<?php
+				$textTwitter = $dataCurso[0]['Actividad']['nombre'] . ' - Período ' . $dataCurso[0]['Periodo']['periodo'] . '.' .
+				' Universidad Cooperativa de Colombia - Cali. vía Bienestar Universitario';
+				?>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-text="<?php echo $textTwitter?>" data-count="none">Tweet</a>
+			</div>
+			<div class="span2"><g:plusone></g:plusone></div>
+			<div class="span9">
+				<div class="fb-like" data-send="false" data-width="450" data-show-faces="true"></div>
+			</div>
+		</div><!-- /row -->
 	</div><!-- /span16 -->
 </div><!-- /row -->
+
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+  {lang: 'es'}
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
