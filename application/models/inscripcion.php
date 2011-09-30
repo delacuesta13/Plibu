@@ -11,4 +11,15 @@
 
 class Inscripcion extends VanillaModel {
 	
+	function nueva_inscripcion ($dni, $idCurso) {
+		$sql = '
+		INSERT INTO inscripciones SET
+		persona_dni = \'' . $dni . '\',
+		curso_id = \'' . $idCurso . '\',
+		fecha_inscripcion = NOW(),
+		created_at = NOW() 
+		';
+		return $this->query($sql);
+	}
+	
 }
