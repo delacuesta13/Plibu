@@ -86,7 +86,7 @@ class InscripcionesController extends VanillaController {
 					 * los que ya está inscrito se cruzan con los 
 					 * horarios del curso a inscribirse.
 					 */
-					if (!INSCRIPCIONES_CRUCEHRS) {
+					if (INSCRIPCIONES_CRUCEHRS) {
 						
 						## obtengo los horarios del curso en el cual se va a inscribir la persona
 						$horariosCurso = performAction('actividades', 'listar_horarios', array($idCurso));
