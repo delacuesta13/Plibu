@@ -39,7 +39,7 @@
 	?>
 	<form method="post" name="formulario" id="formulario" class="pull-right" 
 	action="<?php echo BASE_PATH . '/' . 'personas' . '/' . 'login'?>">
-		<input type="text" name="identificacion" class="span3" placeholder="Identificación">
+		<input type="text" name="identificacion" class="span3" placeholder="Identificación" autocomplete="off">
 		<button type="submit" class="btn">Ingresar</button>
 	</form>
 	<?php 

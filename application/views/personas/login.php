@@ -62,7 +62,7 @@
 					<label for="identificacion">Identificación</label>
 					<div class="input">
 						<input class="xlarge<?php echo ($identificacion_error) ? ' error' : '';?>"
-						id="identificacion" name="identificacion" size="30" type="text"
+						id="identificacion" name="identificacion" size="30" type="text" autocomplete="off"
 						<?php echo (isset($_POST['identificacion'])) ? ('value="' . $_POST['identificacion'] . '"') : '';?>
 						/>
 						<?php echo ($identificacion_error) ? ('<span class="help-inline">' . $ind_error['identificacion'] . '</span>') : '';?>
