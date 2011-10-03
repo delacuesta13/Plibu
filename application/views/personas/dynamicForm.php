@@ -84,11 +84,23 @@ if (strtolower($nombrePerfil)=='estudiante') {
 <?php		
 } elseif (strtolower($nombrePerfil)=='familiar') {
 ?>
+<script type="text/javascript">
+$(function () {
+	$("#inputApoderado label[title]").popover({
+		html: true,
+		placement: "right",
+		offset: -340
+	});
+});
+</script>
 <div id="inputApoderado" class="clearfix">
-	<label for="apoderado">Identificación del apoderado</label>
+	<label for="apoderado" title="Apoderado" 
+	data-content="Persona que pertenece a la Universidad, por medio de la cual, puede acceder a la oferta de Bienestar Universitario.">
+		Identificación del apoderado<sup>?</sup>
+	</label>
 	<div class="input">
 		<input class="xlarge" id="apoderado" name="apoderado" type="text" />
-		<span class="help-inline"></span>
+		
 	</div>
 </div><!-- /clearfix -->
 <div id="inputParentesco" class="clearfix">
