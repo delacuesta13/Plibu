@@ -50,9 +50,9 @@ if (strtolower($nombrePerfil)=='estudiante') {
 	</div>
 </div><!-- /clearfix -->
 <div id="inputSemestre" class="clearfix">
-	<label for="jornada">Semestre</label>
+	<label for="semestre">Semestre</label>
 	<div class="input">
-		<input class="span2" id="jornada" name="jornada" type="text" />
+		<input class="span2" id="semestre" name="semestre" type="text" />
 		<span class="help-inline">Ingrese sólo números <em>arábigos</em> (0-9).</span>
 	</div>
 </div><!-- /clearfix -->
