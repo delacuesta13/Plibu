@@ -49,6 +49,10 @@ class ActividadesController extends VanillaController {
 				'404' => array(
 					'type' => 'info',
 					'message' => '<strong>Oops!</strong> Al parecer la página que intentas acceder no está disponible o definitivamente no existe.'
+				),
+				'login' => array(
+					'type' => 'warning',
+					'message' => '<strong>Inicia sesión!</strong> Es necesario que te identifiques para que puedas gestionar tus inscripciones.'
 				)
 			)
 		);
