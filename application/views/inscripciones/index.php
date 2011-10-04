@@ -24,13 +24,13 @@ $listaMeses = array('Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep
 			<div class="span16">
 				<!-- nav -->
 				<ul class="tabs" data-tabs="tabs" >
-					<li><a href="#perfil">mi Perfil</a></li>
-					<li class="active"><a href="#inscripciones">mis Inscripciones</a></li>
+					<li class="active"><a href="#perfil">mi Perfil</a></li>
+					<li><a href="#inscripciones">mis Inscripciones</a></li>
 				</ul>
 				<!-- content -->
 				<div class="tab-content">
 					<!-- perfil -->
-					<div id="perfil">
+					<div class="active" id="perfil">
 						<div id="cargandoPerfil" style="display: none;">
 							<p>
 								Espere por favor, esta operación puede tardar algún tiempo.<br/>
@@ -40,7 +40,7 @@ $listaMeses = array('Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep
 						<div id="dynamicPerfil"></div>
 					</div><!-- /perfil -->
 					<!-- inscripciones -->
-					<div class="active" id="inscripciones">
+					<div id="inscripciones">
 						<div class="row">
 							<div class="span16">
 								<form>
