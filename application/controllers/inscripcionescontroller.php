@@ -46,10 +46,6 @@ class InscripcionesController extends VanillaController {
 					url += "personas/perfil";
 					divLoading = "cargandoPerfil";
 					divDynamic = "dynamicPerfil";
-				} else if (tab.toLowerCase() == "inscripciones") {
-					url += "' . strtolower($this->_controller) . '/lista_inscripciones";
-					divLoading = "cargandoInscripciones";
-					divDynamic = "dynamicInscripciones";
 				}
 				/* se recibió una tab válida */
 				if (divLoading.length > 0) {
@@ -72,10 +68,278 @@ class InscripcionesController extends VanillaController {
 		
 		loadDataTab ("perfil");
 		
+		function loadDataTable (pag, sort, order) {
+			$(function () {
+				var url = url_project + "inscripciones/listar_inscripciones";
+				if (pag.length!=0) url += "/pag=" + pag;
+				url += "/record=" + $("#regpag").val();	
+				if (sort.length!=0) url += "/sort=" + sort;				
+				if (order.length!=0) url += "/order=" + order;
+				var q = $("#search").val();
+				if (q.length!=0) url += "/search=" + q;
+				$.ajax(
+					{
+						url: url,
+						dataType: "html",
+						beforeSend: function() {
+							$("#dynamicInscripciones").css("opacity", "0.4");
+							$("#cargandoInscripciones").css("display", "block");
+						},
+						success: function( data ) {
+							$("#dynamicInscripciones").html(data);
+							$("#dynamicInscripciones").css("opacity", "1.0");
+							$("#cargandoInscripciones").css("display", "none");
+						}
+					}
+				);
+			});
+		}
+		
+		loadDataTable("", "", "");
+		
+		$(function () {
+		
+			$( "#regpag" ).change(function() {
+				loadDataTable(1, "", "");
+			});
+			
+			$( "#btn_search" ).bind("click", function() {
+				loadDataTable(1, "", "");
+			});
+		
+		});
+		
 		';
 		$this->set('make_tag_js', $tag_js);
 		
 		$this->set('periodoActual', $periodoActual);
+		
+	}
+	
+	function listar_inscripciones () {
+		
+		header("Content-Type: text/html; charset=iso-8859-1");
+		
+		/*
+		 * revisar que el usuario haya iniciado sesión,
+		 * porque de éste se cargará la info de las inscripciones
+		 */
+		if (!array_key_exists('logueado', $_SESSION) || !$_SESSION['logueado']) {
+			$this->render = 0;
+			## no cargar datos porque no ha iniciado sesión
+			echo '<span class="label important">Error</span> ' .
+			'Es necesario que te identifiques para que puedas ver tus inscripciones.';
+			exit;
+		}
+		
+		/***************************************************************************/
+		
+		global $inflect;		
+		$model = ucfirst($inflect->singularize(strtolower($this->_controller)));
+		
+		## recibo los parámetros
+		$parametros = func_get_args();
+		
+		## parámetros por defecto
+		$sortDft = 'inscripcion.fecha_inscripcion';
+		$orderDft = 'DESC';
+		
+		/*
+		 * tipo de parámetros que pueden recibirse y 
+		 * pueden ser agregados al sql
+		 */
+		$tipo_params = array(
+			'/^pag=/' => array(
+				'name' => 'pag', ## nombre de la variable
+				'regex' => '/^[0-9]{1,}$/', ## patrón con el debe coincidir el valor recibido
+				'default' => 1 ## valor defualt sino se define o su valor no coincide con el valor
+			),
+			'/^record=/' => array(
+				'name' => 'record',
+				'regex' => '/^[0-9]{1,}$/',
+				'default' => PAGINATE_LIMIT
+			),
+			'/^sort=/' => array(
+				'name' => 'sort',
+				'regex' => '/^[a-zA-Z0-9_\.]+$/',
+				'default' => $sortDft
+			),
+			'/^order=/' => array(
+				'name' => 'order',
+				'regex' => '/^(asc|desc)$/i',
+				'default' => $orderDft
+			),
+			'/^search=/' => array(
+				'name' => 'search',
+				'regex' => '/^[a-zA-Z0-9 ]{1,30}$/'
+			)
+		);
+		
+		/*
+		 * los siguiente son las columnas que se mostrarán
+		 * en la tabla, y es equivalente a los campos que
+		 * se llamarán en la consulta
+		 */
+		$fieldsTable = array(
+			'curso.id' => array(
+				'params' => array(
+					'showTable' => false,
+					'where' => false
+				) /* end params */
+			), /* end curso.id */
+			'curso.abierto' => array(
+				'params' => array(
+					'showTable' => false,
+					'where' => false
+				) /* end params */
+			), /* end curso.abierto */
+			'actividad.nombre' => array(
+				'text' => 'Actividad',
+				'color' => 'red',
+				'params' => array(
+					'showTable' => true,
+					'sort' => true,
+					'where' => true
+				) /* end params */
+			), /* end actividad.nombre */
+			'area.nombre' => array(
+				'text' => 'Área',
+				'color' => 'blue',
+				'params' => array(
+					'showTable' => true,
+					'sort' => true,
+					'where' => true
+				) /* end params */
+			), /* end area.nombre */
+			'inscripcion.fecha_inscripcion' => array(
+				'text' => 'Fecha Inscripción',
+				'color' => 'green',
+				'params' => array(
+					'showTable' => true,
+					'sort' => true,
+					'where' => false
+				) /* end params */
+			) /* end inscripcion.fecha_inscripcion */
+		);
+		
+		## editar el query según los parámetros recibidos
+		$setQuery = array();
+		$temp = '';
+		
+		for ($i = 0; $i < count($parametros); $i++) {
+			foreach ($tipo_params as $param => $def) {
+				## el parámetro recibido es válido
+				if (preg_match($param, $parametros[$i])) {
+					## obtengo el valor del parámetro recibido
+					$temp = preg_replace($param, '', $parametros[$i]);
+					/*
+					 * si el valor recibido coincide con el patrón 
+					 * de valores para el parámetro, lo asigno a 
+					 * setQuery 
+					 */
+					if (preg_match($def['regex'], $temp)) {	
+						$setQuery[$def['name']] = $temp;
+					} elseif (array_key_exists('default', $def)) {
+						$setQuery[$def['name']] = $def['default'];
+					}
+					unset ($tipo_params[$param]);
+					break;
+				} /* if */
+			} /* foreach */
+			unset ($param, $def);
+		} /* for */
+		
+		## agrego las tablas (y sus alias) a la consulta
+		$this->$model->addTable('cursos', 'curso');
+		$this->$model->addTable('inscripciones', 'inscripcion');
+		$this->$model->addTable('actividades', 'actividad');
+		$this->$model->addTable('areas', 'area');
+		$this->$model->addTable('periodos', 'periodo');
+		
+		$this->set ('fieldsTable', $fieldsTable);
+		
+		## agrego los campos
+		foreach ($fieldsTable as $field => $def) {
+			$this->$model->addField($field);
+		}
+		unset ($field, $def);
+		
+		## agrego los where
+		$this->$model->where('periodo.actual', 1);
+		$this->$model->where('periodo.id', 'curso.periodo_id', true);
+		$this->$model->where('curso.actividad_id', 'actividad.id', true);
+		$this->$model->where('actividad.area_id', 'area.id', true);
+		$this->$model->where('inscripcion.persona_dni', $_SESSION['persona_dni']);
+		$this->$model->where('inscripcion.curso_id', 'curso.id', true);
+		
+		## agrego los LIKE
+		if (array_key_exists('search', $setQuery)) {
+			foreach ($fieldsTable as $field => $def) {
+				## puede buscarse en el campo
+				if ($def['params']['where']) {
+					$this->$model->like ($field, $setQuery['search']);
+				}
+			}
+			unset ($field, $def);
+		}
+		
+		/*
+		 * defino página y record (limit) default.
+		 */
+		$this->set ('pag', 1);
+		$this->set ('record', PAGINATE_LIMIT);
+		
+		## se definió la página
+		if (array_key_exists('pag', $setQuery)) {
+			$this->$model->setPage($setQuery['pag']);
+			$this->set ('pag', $setQuery['pag']);
+		}
+		
+		## se definió el limit
+		if (array_key_exists('record', $setQuery)) {
+			$this->$model->setLimit($setQuery['record']);
+			$this->set ('record', $setQuery['record']);
+		}
+		
+		$orderFields = $fieldsTable;
+		
+		## se definió la columna por la cual ordenar y su dirección
+		if (array_key_exists('sort', $setQuery) && array_key_exists('order', $setQuery) && array_key_exists($setQuery['sort'], $fieldsTable)) {
+			$this->$model->orderBy ($setQuery['sort'], $setQuery['order']);
+			$this->set('sort', $setQuery['sort']);
+			$this->set('order', $setQuery['order']);
+			unset ($orderFields[$setQuery['sort']]);
+		} else {
+			$this->$model->orderBy ($sortDft, $orderDft);
+			$this->set('sort', $sortDft);
+			$this->set('order', $orderDft);
+			unset ($orderFields[$sortDft]);
+		}
+		
+		## termino de agregar los campos para su ordenamiento
+		foreach ($orderFields as $field => $def) {
+			## agrego el campo, sólo si se definió para que sea ordenado
+			if (array_key_exists('sort', $def['params']) && $def['params']['sort']) {
+				$this->$model->orderBy ($field);
+			} /* if */
+		} /* foreach */
+		unset ($orderFields, $field, $def);
+		
+		$data_query = $this->$model->paginate();
+		$this->set('data_query', $data_query);
+		
+		## número de registros sin cláusula LIMIT
+		$this->set('totalRows', $this->$model->getNumTotalRows());
+		## número de registros con cláusula LIMIT
+		$this->set('limitRows', $this->$model->getNumLimitRows());
+		
+		## array de navegación
+		$this->set('itemsNavigation', $this->$model->getNavigation());
+		
+		/***************************************************************************/
+		
+		## función de respuesta ajax
+		$this->doNotRenderHeader = 1;
 		
 	}
 	
