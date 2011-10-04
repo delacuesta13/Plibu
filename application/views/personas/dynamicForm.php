@@ -100,14 +100,14 @@ $(function () {
 	</label>
 	<div class="input">
 		<input class="xlarge" id="apoderado" name="apoderado" type="text" />
-		
+		<span class="help-inline"></span>
 	</div>
 </div><!-- /clearfix -->
 <div id="inputParentesco" class="clearfix">
-	<label for="parentesco">Tipo de consanguineidad o afinidad</label>
+	<label for="parentesco">Tipo de consanguinidad o afinidad</label>
 	<div class="input">
 		<select style="width: auto !important" name="parentesco" id="parentesco">
-			<option>Seleccione un tipo de consanguineidad o afinidad</option>
+			<option>Seleccione un tipo de consanguinidad o afinidad</option>
 			<?php
 			$strSelect = '';
 			for ($i = 0; $i < count($listaParentescos); $i++) {
@@ -117,6 +117,7 @@ $(function () {
 			echo $strSelect;	 
 			?>
 		</select>
+		<span class="help-inline"></span>
 	</div>
 </div><!-- /clearfix -->
 <?php		
