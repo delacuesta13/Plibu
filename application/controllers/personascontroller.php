@@ -291,7 +291,8 @@ class PersonasController extends VanillaController {
 					perfil_multientidad = \'' . $validarData['perfilUsuario'] . '\',
 					programa_id = \'' . $validarData['programaAcademico'] . '\',
 					jornada_multientidad = \'' . $validarData['jornada'] . '\',
-					semestre = \'' . $validarData['semestre'] . '\'';
+					semestre = \'' . $validarData['semestre'] . '\',
+					created_at = NOW()';
 					## éxito al crear 
 					if (!$perfilPeriodoActual && $this->Persona->query($sqlNuevo)) {
 						echo '<script type="text/javascript">loadDataTab("perfil");</script>';
@@ -337,7 +338,8 @@ class PersonasController extends VanillaController {
 					persona_dni = \'' . $_SESSION['persona_dni'] . '\',
 					periodo_id = \'' . $periodoActual[0]['Periodo']['id'] . '\',
 					perfil_multientidad = \'' . $validarData['perfilUsuario'] . '\',
-					programa_id = \'' . $validarData['programaAcademico'] . '\'';
+					programa_id = \'' . $validarData['programaAcademico'] . '\',
+					created_at = NOW()';
 					## éxito al crear 
 					if (!$perfilPeriodoActual && $this->Persona->query($sqlNuevo)) {
 						echo '<script type="text/javascript">loadDataTab("perfil");</script>';
@@ -423,7 +425,8 @@ class PersonasController extends VanillaController {
 					periodo_id = \'' . $periodoActual[0]['Periodo']['id'] . '\',
 					perfil_multientidad = \'' . $validarData['perfilUsuario'] . '\',
 					parentesco_multientidad = \'' . $validarData['parentesco'] . '\',
-					apoderado_dni = \'' . $validarData['apoderado'] . '\'';
+					apoderado_dni = \'' . $validarData['apoderado'] . '\',
+					created_at = NOW()';
 					## éxito al crear 
 					if (!$perfilPeriodoActual && $this->Persona->query($sqlNuevo)) {
 						echo '<script type="text/javascript">loadDataTab("perfil");</script>';
