@@ -17,6 +17,66 @@ class InscripcionesController extends VanillaController {
 	
 	function index () {
 		
+		## revisar que el usuario haya iniciado sesión
+		if (!array_key_exists('logueado', $_SESSION) || !$_SESSION['logueado']) {
+			redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action'], array('error', 'login'));
+			exit;
+		}
+		
+		/*
+		 * es necesario que se haya definido un
+		 * período como actual, pues en base a éste
+		 * se gestiona el perfil y las inscripciones del
+		 * usuario.
+		 */
+		$periodoActual = performAction('actividades', 'periodo_actual', array());
+		if (!is_array($periodoActual) || count($periodoActual)==0) {
+			redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action'], array('error', '404'));
+			exit;
+		}
+		
+		$tag_js = '
+		
+		function loadDataTab (tab) {
+			$(function () {
+				var url = url_project;
+				var divLoading = "";
+				var divDynamic = "";
+				if (tab.toLowerCase() == "perfil") {
+					url += "personas/perfil";
+					divLoading = "cargandoPerfil";
+					divDynamic = "dynamicPerfil";
+				} else if (tab.toLowerCase() == "inscripciones") {
+					url += "' . strtolower($this->_controller) . '/lista_inscripciones";
+					divLoading = "cargandoInscripciones";
+					divDynamic = "dynamicInscripciones";
+				}
+				/* se recibió una tab válida */
+				if (divLoading.length > 0) {
+					$.ajax(
+						{
+							url: url,
+							dataType: "html",
+							beforeSend: function() {
+								$( "#" + divLoading ).css("display", "block");
+							},
+							success: function( data ) {
+								$( "#" + divLoading ).css("display", "none");
+								$( "#" + divDynamic).html(data);
+							}
+						}
+					);
+				}
+			});
+		}
+		
+		loadDataTab ("perfil");
+		
+		';
+		$this->set('make_tag_js', $tag_js);
+		
+		$this->set('periodoActual', $periodoActual);
+		
 	}
 	
 	/*
