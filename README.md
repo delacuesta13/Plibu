@@ -5,7 +5,7 @@ La **Pl**ataforma de **I**nscripciones de **B**ienestar **U**niversitario es una
 que se realiza a trav&eacute;s de dicho sistema.
 
 Esta *aplicaci&oacute;n web* permite que la *comunidad universitaria* conozca la oferta de actividades de un determinado per&iacute;odo acad&eacute;mico, de tal forma que, las personas que conforman dicha comunidad podr&aacute;n inscribirse en las diferentes actividades. *Plibu*, a diferencia de *Sigabu*, no est&aacute; delimitada a un determinado grupo de personas; sin embargo,
-para poder inscribirse en alguna actividad, gestionar el perfil (seg&uacute;n la clasificaci&oacute;n de la *comunidad universitaria*) y revisar las inscripciones en un determinado per&iacute;do, el usuario que interact&uacute;a con la aplicaci&oacute;n deber&aacute; identificarse en &eacute;sta, raz&oacute;n por la cual, el proceso de identificaci&oacute;n ser&aacute; exitoso si los datos de la persona existen en la Base de Datos que se gestiona a trav&eacute;s del sistema *Sigabu*.
+para poder inscribirse en alguna actividad, gestionar el perfil (seg&uacute;n la clasificaci&oacute;n de la *comunidad universitaria*) y revisar las inscripciones en un determinado per&iacute;odo, el usuario que interact&uacute;a con la aplicaci&oacute;n deber&aacute; identificarse en &eacute;sta, raz&oacute;n por la cual, el proceso de identificaci&oacute;n ser&aacute; exitoso si los datos de la persona existen en la Base de Datos que se gestiona a trav&eacute;s del sistema *Sigabu*.
 
 ## Requerimientos
 
@@ -15,11 +15,13 @@ para poder inscribirse en alguna actividad, gestionar el perfil (seg&uacute;n la
 
 ## Instalaci&oacute;n
 
-Antes de iniciar con la instalaci&oacute;n de esta aplicaci&oacute;n, recuerde que debe haber instalado el sistema *Sigabu*.
+Antes de iniciar la instalaci&oacute;n de esta aplicaci&oacute;n, recuerde que debe haber instalado el sistema *Sigabu*.
 
-0. Haber instalado el sistema *Sigabu*, y la base de datos que se incluye en el respositorio de dicho sistema.
-1. Ubicar el directorio ***plibu*** en el directorio ra&iacute;z del servidor web <sup>2</sup>.
-2. Configurar la plataforma.
+1. Haber instalado el sistema *Sigabu*, y la base de datos que se incluye en el respositorio de dicho sistema.
+2. Ubicar el directorio ***plibu*** en el directorio ra&iacute;z del servidor web <sup>2</sup>.
+3. Configurar la plataforma.
+
+**Nota:** Aseg&uacute;rese que est&eacute; habilitado el m&oacute;dolu `mod_rewrite` de Apache. 
 
 ## Configuraci&oacute;n
 
