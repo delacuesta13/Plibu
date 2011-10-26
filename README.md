@@ -61,7 +61,7 @@ A continuaci&oacute;n se explican las variables de configuraci&oacute;n de la pl
 [Twitter](http://twitter.com/twitter) [Bootstrap](http://twitter.github.com/bootstrap/).
 
 1. La aplicaci&oacute;n est&aacute; lista para trabajar en la mayor&iacute;a de navegadores web **modernos** <sup>3</sup>.
-2. Resoluci&oacute;n de pantalla superior a **1000\*800** pixeles.
+2. Resoluci&oacute;n de pantalla superior a **1000\*800** p&iacute;xeles.
 
 ## Seguimiento a bugs
 
