@@ -24,6 +24,8 @@ class InscripcionesController extends VanillaController {
 			
 			## destruyo la sesión actual
 			session_destroy();
+			
+			session_start();
 		}
 		
 	}

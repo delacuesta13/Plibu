@@ -14,7 +14,6 @@ class PersonasController extends VanillaController {
 	function beforeAction () {
 		
 		session_start();
-		
 		if (!$this->loginPlibu()) {
 			## destruyo las variables de sesión
 			session_unset();
@@ -22,6 +21,8 @@ class PersonasController extends VanillaController {
 			
 			## destruyo la sesión actual
 			session_destroy();
+			
+			session_start();
 		}
 		
 	}
@@ -568,7 +569,7 @@ class PersonasController extends VanillaController {
 	function loginPlibu () {
 		$login = false;
 		if (isset($_SESSION['persona_dni'], $_SESSION['nombres'], $_SESSION['apellidos'], $_SESSION['logueado'], $_SESSION['webapp'])) {
-			if ($_SESSION['logueado'] && strtolower($_SESSION['webapp'])=='plibu') {
+			if ($_SESSION['logueado'] && $_SESSION['webapp']=='plibu') {
 				$login = true;
 			}
 		}
