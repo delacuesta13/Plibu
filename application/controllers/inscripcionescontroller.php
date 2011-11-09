@@ -12,7 +12,20 @@
 class InscripcionesController extends VanillaController {
 	
 	function beforeAction () {
+		
 		session_start();
+		
+		$loginPlibu = performAction('personas', 'loginPlibu', array());
+		
+		if (!$loginPlibu) {
+			## destruyo las variables de sesión
+			session_unset();
+			$_SESSION = array();
+			
+			## destruyo la sesión actual
+			session_destroy();
+		}
+		
 	}
 	
 	function index () {
