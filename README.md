@@ -98,13 +98,6 @@ por Bienestar. [*Sigabu*](https://github.com/delacuesta13/Sigabu) es la denomina
 ampliando la informaci&oacute;n para cada actividad, as&iacute; como los horarios que se definieron para &eacute;sta. Adem&aacute;s de consultar las actividades, la *comunidad*
 tiene la posibilidad de inscribirse en &eacute;stas. **Plibu** es la denominaci&oacute;n que se le ha dado a esta interfaz.
 
----
-
-### Importante
-
-Por favor **no** iniciar sesi&oacute;n en las interfaces **Sigabu** y **Plibu** al mismo tiempo, usando un mismo *navegador web*. 
-Se recomienda inicar sesi&oacute;n en una sola interfaz, y finalizada la misma, iniciar sesi&oacute;n en la otra interfaz.
-
 ## Acerca de  
 
 El *Sistema de Informaci&oacute;n para los procesos de Inscripci&oacute;n, Control de Asistencia y Gesti&oacute;n de Actividades de las &aacute;reas de
