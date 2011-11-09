@@ -12,7 +12,7 @@
 <div class="page-header">
 	<h1>
 		Actividades
-		<?php echo (isset($periodo_actual)) ? ('<small>Periodo ' . $periodo_actual[0]['Periodo']['periodo'] . '</small>') : ''?>
+		<?php echo (isset($periodo_actual)) ? ('<small>Período ' . $periodo_actual[0]['Periodo']['periodo'] . '</small>') : ''?>
 	</h1>
 </div>
 
