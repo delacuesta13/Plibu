@@ -12,7 +12,18 @@
 class PersonasController extends VanillaController {
 	
 	function beforeAction () {
+		
 		session_start();
+		
+		if (!$this->loginPlibu()) {
+			## destruyo las variables de sesión
+			session_unset();
+			$_SESSION = array();
+			
+			## destruyo la sesión actual
+			session_destroy();
+		}
+		
 	}
 	
 	function consultar_persona ($dni = null) {
@@ -510,6 +521,7 @@ class PersonasController extends VanillaController {
 					$_SESSION['nombres'] = $data_persona[0]['Persona']['nombres'];
 					$_SESSION['apellidos'] = $data_persona[0]['Persona']['apellidos'];
 					$_SESSION['logueado'] = true;
+					$_SESSION['webapp'] = 'plibu';
 					## redirecciono al home de la aplicación
 					redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action']);
 				} else {
@@ -546,6 +558,21 @@ class PersonasController extends VanillaController {
 		
 		## redirecciono al login
 		redirectAction($GLOBALS['default_controller'], $GLOBALS['default_action']);
+	}
+	
+	/**
+	 * Revisar que, si se ha iniciado sesión,
+	 * ésta corresponda a Plibu, de lo contrario,
+	 * finalizar la sesión.
+	 */
+	function loginPlibu () {
+		$login = false;
+		if (isset($_SESSION['persona_dni'], $_SESSION['nombres'], $_SESSION['apellidos'], $_SESSION['logueado'], $_SESSION['webapp'])) {
+			if ($_SESSION['logueado'] && strtolower($_SESSION['webapp'])=='plibu') {
+				$login = true;
+			}
+		}
+		return $login;
 	}
 	
 	function afterAction () {
